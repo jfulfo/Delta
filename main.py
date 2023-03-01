@@ -10,10 +10,11 @@ def main(cli):
         pass
 
 if __name__ == "__main__":
-    cli = input("Is this a CLI app? (y/n): ")
-    if cli == "y":
-        main(True)
-    else:
-        main(False)
+    main(True)
+    #cli = input("Is this a CLI app? (y/n): ")
+    #if cli.lower() == "y":
+    #    main(True)
+    #else:
+    #    main(False)
 
 
