@@ -1,5 +1,3 @@
-import os
-import subprocess
 from datetime import date, time
 from json import JSONEncoder, JSONDecoder
 from rich import print
@@ -28,6 +26,7 @@ class Event:
 
     def __str__(self):
         return f"""{self.name}:
+        Name: {self.name}
         Date: {self.dt} 
         Time: {self.start} - {self.end}
         Priority: {self.priority}

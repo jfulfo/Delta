@@ -1,8 +1,7 @@
 import os
-import subprocess
 import sys
 import json
-from schedule import Schedule, EventEncoder, EventDecoder, ScheduleEncoder, ScheduleDecoder
+from schedule import Schedule, EventEncoder, ScheduleDecoder
 from rich.prompt import Confirm
 
 USER_DIR = "Users"
