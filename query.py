@@ -1,4 +1,5 @@
 import sys
+import os
 import json
 import speech_recognition as sr 
 import pyttsx3
@@ -25,12 +26,18 @@ class Query:
 
     def get_command(self, question: str, choices: list[str], default: str):
         c = ",".join(choices)
-        print(question + f"[bold blue]{c}[/bold blue] [bold magenta]{default}[/bold magenta]", end=" ")
+        print(question + f":[bold blue]{c}[/bold blue] [bold magenta]({default})[/bold magenta]")
+        print("[bold yellow]Wait until ready...[/bold yellow]")
+        self.engine.say(question)
+        self.engine.runAndWait()
         raw_command = self.listen()
-        self.command = str(self.parse_command(raw_command))
-        print(self.command)
+        user_command = True if question == "User to load/create" else False
+        self.command = self.parse_command(raw_command, user_command=user_command)
+        print("\n" + self.command)
 
-    def parse_command(self, raw_command: str):
+    def parse_command(self, raw_command: str, user_command: bool = False):
+        if user_command:
+            return raw_command
         for word in raw_command.split():
             if word in COMMANDS:
                 return word
@@ -42,16 +49,19 @@ class Query:
         try: 
             r = sr.Recognizer()
             mic = sr.Microphone()
-            self.engine.say("Taking input")
-            self.engine.runAndWait()
             with mic as source:
-                r.adjust_for_ambient_noise(source)
+                r.adjust_for_ambient_noise(source,duration=0.5)
+                print("[bold green]Ready[/bold green]")
                 audio = r.listen(source)
-            raw_command = str(r.recognize_google(audio))
+            sys.stdout = open(os.devnull, 'w')
+            raw_command = r.recognize_google(audio_data=audio,)
+            sys.stdout = sys.__stdout__
             return raw_command.lower()
         except sr.UnknownValueError:
+            print("[bold red]Unknown Value Error[/bold red]")
             sys.exit(1)
         except sr.RequestError:
+            print("[bold red]Request Error[/bold red]")
             sys.exit(1)
 
     def generate_prompt(self):

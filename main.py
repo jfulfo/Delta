@@ -16,7 +16,7 @@ def main():
             user = q.command
         else:
             user = Prompt.ask("User to load/create")
-        os.system(f"python3 cli.py {user} {speech}")
+        os.system(f"python cli.py {user} {speech}")
     else:
         print("GUI is not yet implemented")
         sys.exit(1)

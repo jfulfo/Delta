@@ -28,11 +28,15 @@ class Shell:
             return str(self.query.get_command(question, choices, default))
         else:
             if choices == [] or default == "":
-                return Prompt.ask(question)
-            return str(Prompt.ask(question, choices=choices, default=default))
+                c = Prompt.ask(question)
+                self.query.command = c 
+                return c
+            c = str(Prompt.ask(question, choices=choices, default=default))
+            self.query.command = c
+            return c
 
-    def run(self, command: str):
-        match command.lower():
+    def run(self):
+        match self.query.command:
             case "add":
                 name = self.get_input("Event name")
 
@@ -166,6 +170,7 @@ class Shell:
 
             case "exit":
                 print("Exiting...")
+                sys.exit(0)
 
             case _:
                 print("[red]Invalid command[/red]")
@@ -184,7 +189,7 @@ def main(username: str, speech: bool, delete: bool = False):
     shell = Shell(user, speech)
     command = shell.get_input(f"{username}")
     while command != "exit":
-        shell.run(command)
+        shell.run()
         command = shell.get_input(f"{username}")
         if command == "logout":
             username = shell.get_input("Username")
